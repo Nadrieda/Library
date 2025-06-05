@@ -1,21 +1,21 @@
 This project uses a virtual environment. The 'requirements.txt' file includes all packages including dependencies installed via Flask.
 
 ### For virtual enviroment:
-python -m venv myenv
-myenv\Scripts\activate 
-or
-source myenv/bin/activate
-
-Remember to activate the enviroment
-myenv\Scripts\activate
-or
-source myenv/bin/activate
+python -m venv myenv<br/>
+myenv\Scripts\activate <br/>
+or<br/>
+source myenv/bin/activate<br/>
+<br/>
+Remember to activate the enviroment<br/>
+myenv\Scripts\activate<br/>
+or<br/>
+source myenv/bin/activate<br/>
 
 ### Installing dependencies:
 pip install -r requirements.txt
 
 ### PostgreSQL setup
-This project uses PostgreSQL as the database, which needs to be installed. https://www.postgresql.org/download/
+This project uses PostgreSQL as the database, which needs to be installed. https://www.postgresql.org/download/<br/>
 You will need to create a database and then modify the connection settings in db.py.
 
 ### Initialize database:
