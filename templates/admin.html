@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<h2>Add Entry</h2>
+
+<form id="entry-form" method="post" action="/create">
+    <label><input type="radio" name="entry_type" value="book" checked> Book</label>
+    <label><input type="radio" name="entry_type" value="author"> Author</label>
+    <label><input type="radio" name="entry_type" value="publisher"> Publisher</label>
+    <label><input type="radio" name="entry_type" value="genre"> Genre</label>
+
+    <div id="form-fields" style="margin-top: 1em;"></div>
+
+    <button type="submit">Add Entry</button>
+</form>
+
+<script>
+const formFields = document.getElementById("form-fields");
+const radioButtons = document.querySelectorAll('input[name="entry_type"]');
+
+function updateFields(type) {
+    let html = '<table>';
+    if (type === "book") {
+        html += `
+            <tr><td><label>Title:</label></td><td><input type="text" name="title" required></td></tr>
+            <tr><td><label>Author:</label></td><td>
+                <select name="author_id" required>
+                    {% for author in authors %}
+                        <option value="{{ author[0] }}">{{ author[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>Genre:</label></td><td>
+                <select name="genre_name">
+                    {% for genre in genres %}
+                        <option value="{{ genre[0] }}">{{ genre[0] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>Publisher:</label></td><td>
+                <select name="publisher_id" required>
+                    {% for publisher in publishers %}
+                        <option value="{{ publisher[0] }}">{{ publisher[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>ISBN:</label></td><td><input type="text" name="isbn"></td></tr>
+            <tr><td><label>Copies Available:</label></td><td><input type="number" name="copies_available" value="0"></td></tr>
+            <tr><td><label>Price:</label></td><td><input type="text" name="price"></td></tr>
+            <tr><td><label>Description:</label></td><td><textarea name="description"></textarea></td></tr>
+        `;
+    }   else if (type === "author") {
+        html += `
+            <tr><td><label>Author Name:</label></td><td><input type="text" name="author_name" required></td></tr>
+        `;
+    }   else if (type === "publisher") {
+        html += `
+            <tr><td><label>Publisher Name:</label></td><td><input type="text" name="publisher_name" required></td></tr>
+        `;
+    }   else if (type === "genre") {
+        html += `
+            <tr><td><label>Genre Name:</label></td><td><input type="text" name="genre_name" required></td></tr>
+        `;
+    }
+    html += '</table>';
+    formFields.innerHTML = html;
+}
+
+updateFields("book");
+
+radioButtons.forEach(radio => {
+    radio.addEventListener('change', () => updateFields(radio.value));
+});
+</script>
+
+
+<hr>
+<h2>Manage Entry</h2>
+
+<form id="manage-form" method="post" action="/manage-entry">
+    <label><input type="radio" name="manage_type" value="book" checked> Book</label>
+    <label><input type="radio" name="manage_type" value="author"> Author</label>
+    <label><input type="radio" name="manage_type" value="publisher"> Publisher</label>
+    <label><input type="radio" name="manage_type" value="genre"> Genre</label>
+
+    <div id="manage-fields" style="margin-top: 1em;"></div>
+
+    <label>
+        <input type="radio" name="action_type" value="update" checked> Update
+    </label>
+    <label>
+        <input type="radio" name="action_type" value="delete"> Delete
+    </label>
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    const bookData = {{ book_data | tojson | safe }};
+</script>
+
+<script>
+function attachBookListener() {
+    const bookSelect = document.querySelector('#manage-form select[name="book_id"]');
+    if (!bookSelect) return;
+
+    function fillFields(book) {
+        const form = document.querySelector('#manage-form');
+        form.querySelector('input[name="title"]').value = book.title || '';
+        form.querySelector('select[name="author_id"]').value = book.author_id;
+        form.querySelector('select[name="genre_name"]').value = book.genre_name;
+        form.querySelector('select[name="publisher_id"]').value = book.publisher_id;
+        form.querySelector('input[name="isbn"]').value = book.isbn || '';
+        form.querySelector('input[name="copies_available"]').value = book.copies_available || '';
+        form.querySelector('input[name="price"]').value = book.price || '';
+        form.querySelector('textarea[name="description"]').value = book.summary || '';
+    }
+
+    bookSelect.addEventListener("change", function () {
+        const book = bookData[this.value];
+        if (book) fillFields(book);
+    });
+
+    // Trigger once on load
+    bookSelect.dispatchEvent(new Event("change"));
+}
+
+function updateManageFields(type) {
+    let html = '<table>';
+
+    if (type === "book") {
+        html += `
+            <tr><td><label>Select Book:</label></td><td>
+                <select name="book_id" required>
+                    {% for book in books %}
+                        <option value="{{ book[0] }}">{{ book[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>Title:</label></td><td><input type="text" name="title"></td></tr>
+            <tr><td><label>Author:</label></td><td>
+                <select name="author_id">
+                    {% for author in authors %}
+                        <option value="{{ author[0] }}">{{ author[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>Genre:</label></td><td>
+                <select name="genre_name">
+                    {% for genre in genres %}
+                        <option value="{{ genre[0] }}">{{ genre[0] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>Publisher:</label></td><td>
+                <select name="publisher_id">
+                    {% for publisher in publishers %}
+                        <option value="{{ publisher[0] }}">{{ publisher[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>ISBN:</label></td><td><input type="text" name="isbn"></td></tr>
+            <tr><td><label>Copies Available:</label></td><td><input type="number" name="copies_available"></td></tr>
+            <tr><td><label>Price:</label></td><td><input type="text" name="price"></td></tr>
+            <tr><td><label>Description:</label></td><td><textarea name="description"></textarea></td></tr>
+        `;
+    } else if (type === "author") {
+        html += `
+            <tr><td><label>Select Author:</label></td><td>
+                <select name="author_id" required>
+                    {% for author in authors %}
+                        <option value="{{ author[0] }}">{{ author[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>New Author Name:</label></td><td><input type="text" name="author_name"></td></tr>
+        `;
+    } else if (type === "publisher") {
+        html += `
+            <tr><td><label>Select Publisher:</label></td><td>
+                <select name="publisher_id" required>
+                    {% for publisher in publishers %}
+                        <option value="{{ publisher[0] }}">{{ publisher[1] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>New Publisher Name:</label></td><td><input type="text" name="publisher_name"></td></tr>
+        `;
+    } else if (type === "genre") {
+        html += `
+            <tr><td><label>Select Genre:</label></td><td>
+                <select name="genre_name" required>
+                    {% for genre in genres %}
+                        <option value="{{ genre[0] }}">{{ genre[0] }}</option>
+                    {% endfor %}
+                </select>
+            </td></tr>
+            <tr><td><label>New Genre Name:</label></td><td><input type="text" name="new_genre_name"></td></tr>
+        `;
+    }
+
+    html += '</table>';
+    document.getElementById("manage-fields").innerHTML = html;
+
+    if (type === "book") {
+        attachBookListener();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    updateManageFields("book");
+    document.querySelectorAll('input[name="manage_type"]').forEach(radio => {
+        radio.addEventListener('change', () => updateManageFields(radio.value));
+    });
+});
+</script>
+
+<hr>
+<h2>Manage Loans</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th>Book</th>
+        <th>Borrowed</th>
+        <th>Due</th>
+        <th>Returned</th>
+        <th>Actions</th>
+    </tr>
+    {% for loan in loans %}
+        <tr>
+        <td>{{ loan[1] }}</td>
+        <td>{{ loan[2] }}</td>
+        <td>{{ loan[3] }}</td>
+        <td>{{ loan[4] }}</td>
+        <td>{{ loan[5] }}</td>
+        <td>{{ 'Yes' if loan[6] else 'No' }}</td>
+        <td>
+            {% if not loan[6] %}
+            <form method="post" action="/mark-returned" style="display:inline;">
+                <input type="hidden" name="borrow_id" value="{{ loan[0] }}">
+                <button type="submit">Mark as Returned</button>
+            </form>
+            {% else %}
+            -
+            {% endif %}
+        </td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

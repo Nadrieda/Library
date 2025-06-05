@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book[1] }}{% endblock %}
+
+{% block content %}
+    <h2>{{ book[1] }}</h2>
+    <p><strong>Author:</strong> {{ book[2] }}</p>
+    <p><strong>Genre:</strong> {{ book[3] }}</p>
+    <p><strong>Publisher:</strong> {{ book[4] }}</p>
+    <p><strong>ISBN:</strong> {{ book[5] }}</p>
+    <p><strong>Copies Available:</strong> {{ book[6] }}</p>
+    <p><strong>Price:</strong> {{ book[7] }} kr.</p>
+    <p><strong>Summary:</strong></p>
+    <div style="max-width: 600px; line-height: 1.5;">
+        {{ book[8] }}
+    </div>
+    {% if current_user.is_authenticated %}
+        <form method="POST" action="/borrow/{{ book[0] }}">
+            <button type="submit">Borrow this book</button>
+        </form>
+    {% endif %}
+    <br>
+    <a href="/books">← Back to books</a>
+{% endblock %}

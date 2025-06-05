@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Library App{% endblock %}</title>
+</head>
+<body>
+    <h1>Library App</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/books">Books</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('my_borrows') }}">My Borrows</a>
+        {% if current_user.is_admin %}
+            <a href="/admin">Admin</a>
+        {% endif %}
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a> <a href="/register">Register</a>
+        {% endif %}
+        <!-- Add more links here -->
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Books</h2>
+<form method="get" action="/books">
+    <input type="text" name="q" value="{{ query or '' }}" placeholder="Search by title (regex)">
+    <button type="submit">Search</button>
+</form>
+<div style="max-width: 300px; background: #f1f1f1; padding: 10px 15px;">
+    <strong>Search Tips:</strong>
+    <ul style="margin: 0; padding-left: 20px;">
+        <li>Use <code>return</code> to match titles with “Return”</li>
+        <li>Try <code>t$</code> to find titles ending with 't'</li>
+        <li>Try <code>^the.*e.*</code></li>
+        <li>Search is case-insensitive</li>
+    </ul>
+</div>
+<br>
+{% for book in books %}
+    <li><a href="/books/{{ book[0] }}">{{ book[1] }}</a></li>
+{% endfor %}
+
+{% endblock %}

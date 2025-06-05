@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Borrowed Books{% endblock %}
+
+{% block content %}
+<h2>My Borrowed Books</h2>
+
+{% if borrows %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Title</th>
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+        <th>Status</th>
+    </tr>
+    {% for borrow in borrows %}
+    <tr>
+        <td>{{ borrow[0] }}</td>
+        <td>{{ borrow[1] }}</td>
+        <td>{{ borrow[2] if borrow[2] else "—" }}</td>
+        <td>
+            {% if borrow[3] %}
+                Returned
+            {% else %}
+                Not Returned
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>You haven't borrowed any books yet.</p>
+{% endif %}
+
+{% endblock %}
