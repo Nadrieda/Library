@@ -1,16 +1,3 @@
-This project uses a virtual environment. The 'requirements.txt' file includes all packages including dependencies installed via Flask.
-
-### For virtual enviroment:
-python -m venv myenv<br/>
-myenv\Scripts\activate <br/>
-or<br/>
-source myenv/bin/activate<br/>
-<br/>
-Remember to activate the enviroment<br/>
-myenv\Scripts\activate<br/>
-or<br/>
-source myenv/bin/activate<br/>
-
 ### Installing dependencies:
 pip install -r requirements.txt
 
