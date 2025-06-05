@@ -15,7 +15,7 @@ source myenv/bin/activate
 pip install -r requirements.txt
 
 ### PostgreSQL setup
-This project uses PostgreSQL as the database, which it needs to be installed. https://www.postgresql.org/download/
+This project uses PostgreSQL as the database, which needs to be installed. https://www.postgresql.org/download/
 You will need to create a database and then modify the connection settings in db.py.
 
 ### Initialize database:
